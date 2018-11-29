@@ -28,69 +28,86 @@ public class MusicManageController {
 		private ManageUpdateService updateService;
 		@Autowired
 		private ManageDeleteService manageDeleteService;
-	
+		
 		@RequestMapping("/QQmusic")
-		String Home() {
+		public String findQQmusicPlaylist() {
 			try {
 				List<MusicDO> list=qqManageService.analyze();
 				manageSaveService.insert(list);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return "home1";
+			return "findQQmusicPlaylist";
 		}
 	
 		@RequestMapping("/NetEasemusic")
-		String Home2() {
+		public String findNetEasemusicPlaylist() {
 			try {
 				List<MusicDO> list=netManageService.analyze();
 				manageSaveService.insert(list);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return "home2";
+			return "findNetEasemusicPlaylist";
 		}
 		
 		
 		@RequestMapping("/save")
-		String Home3() {
+		public String saveFileTolocal() {
 			try {
 				updateService.saveFile();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return "home3";
+			return "saveFileTolocal";
 		}
 		
-		
+		/**
+		 * 删除已下载但是文件内容为空的文件
+		 * @return
+		 */
 		@RequestMapping("/deletezerofile")
-		String Home4() {
+		public String deleteZerofile() {
 			try {
 				manageDeleteService.delete();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return "home4";
+			return "deleteZerofile";
 		}
 		
+		/**
+		 * 更新文件
+		 * @param music
+		 * @return
+		 */
 		@RequestMapping("/updatefile")
-		String Home5(MusicDO music) {
+		public String updateFile(MusicDO music) {
 			updateService.updateExcetionFile(music);
-			return "home5";
+			return "updateFile";
 		}
 		
-		
+		/**
+		 * 查询歌曲详情
+		 * @param music
+		 * @return
+		 */
 		@RequestMapping("/sel")
-		String Home6(MusicDO music) {
+		public String selSong(MusicDO music) {
 			System.out.println(music.getSongName());
 			System.out.println(JSONObject.toJSONString(music));
 			return JSONObject.toJSONString(updateService.selectFile(music));
 		}
 		
+		/**
+		 * 手动更新打标记
+		 * @param music
+		 * @return
+		 */
 		@RequestMapping("/manupdate")
-		String Home7(MusicDO music) {
+		public String manupdate(MusicDO music) {
 			System.out.println(JSONObject.toJSONString(music));
 			updateService.manupdateFile(music);
-			return "home7";
+			return "manupdate";
 		}
 }

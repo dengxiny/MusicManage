@@ -31,8 +31,12 @@ public class QQmusicManageServiceImpl implements ManageService{
 	@Value("${QQ_UserPlaylistcid}")
 	private String cid;
 	
+	/**
+	 * 
+	 */
 	@Override
 	public List<MusicDO> analyze() throws Exception {
+		//分析分析歌单列表
 		HttpsUtils h=new HttpsUtils();
 		CloseableHttpClient httpClient =h.getHttpClient();
 		HttpGet httpGet=new HttpGet("https://c.y.qq.com/rsc/fcgi-bin/fcg_get_profile_homepage.fcg?format=jsonp&inCharset=utf8&outCharset=utf-8&platform=yqq&cid="+cid+"&userid="+userid+"&reqfrom=1");
@@ -57,7 +61,10 @@ public class QQmusicManageServiceImpl implements ManageService{
 		}
 		return music;
 	}
-
+	
+	/**
+	 * 分析歌单
+	 */
 	@Override
 	public List<MusicDO> analyzePlaylist(MusicDO music) throws Exception {
 		HttpsUtils h=new HttpsUtils();

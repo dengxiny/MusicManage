@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.musicManage.dao.MusicDao">
+<resultMap id="BaseResultMap" type="com.musicManage.dao.model.MusicDO">
+	<id column="SONG_ID" property="songId" jdbcType="VARCHAR" />
+	<result column="SONG_NAME" property="songName" jdbcType="VARCHAR" />
+	<result column="SONG_EXTRA" property="songExtra" jdbcType="VARCHAR" />
+	<result column="PLAYLIST_ID" property="playlistId" jdbcType="VARCHAR" />
+	<result column="PLAYLIST_NAME" property="playlistName" jdbcType="VARCHAR" />
+	<result column="PLAYLIST_EXTRA" property="playlistExtra" jdbcType="VARCHAR" />
+	<result column="SINGER_NAME" property="singerName" jdbcType="VARCHAR" />
+	<result column="SINGER_EXTRA" property="singerExtra" jdbcType="VARCHAR" />
+	<result column="ALBUM_NAME" property="albumName" jdbcType="VARCHAR" />
+	<result column="ORIGIN" property="origin" jdbcType="VARCHAR" />
+	<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+	<result column="QUALITY" property="quality" jdbcType="VARCHAR" />
+	<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+</resultMap>
+
+	<sql id="Base_Column_List">
+	SONG_ID,SONG_NAME,SONG_EXTRA,PLAYLIST_ID,PLAYLIST_NAME,
+	PLAYLIST_EXTRA,SINGER_NAME,SINGER_EXTRA,ALBUM_NAME,ORIGIN,
+	ADDRESS,QUALITY,REMARK
+	</sql>
+	
+	<select id="select" resultMap="BaseResultMap" >
+		select <include refid="Base_Column_List"/> from music 
+		where 1=1
+		<if test="songId != null and songId != ''">
+			and SONG_ID=#{songId,jdbcType=VARCHAR}
+		</if>
+		<if test="songName != null and songName != ''">
+			and SONG_NAME like CONCAT('%',#{songName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="songExtra != null and songExtra != ''">
+			and SONG_EXTRA=#{songExtra,jdbcType=VARCHAR}
+		</if>
+		<if test="playlistId != null and playlistId != ''">
+			and PLAYLIST_ID=#{playlistId,jdbcType=VARCHAR}
+		</if>
+		<if test="playlistName != null and playlistName != ''">
+			and PLAYLIST_NAME=#{playlistName,jdbcType=VARCHAR}
+		</if>
+		<if test="playlistExtra != null and playlistExtra != ''">
+			and PLAYLIST_EXTRA=#{playlistExtra,jdbcType=VARCHAR}
+		</if>
+		<if test="singerName != null and singerName != ''">
+			and SINGER_NAME=#{singerName,jdbcType=VARCHAR}
+		</if>
+		<if test="singerExtra != null and singerExtra != ''">
+			and SINGER_EXTRA=#{singerExtra,jdbcType=VARCHAR}
+		</if>
+		<if test="albumName != null and albumName != ''">
+			and ALBUM_NAME=#{albumName,jdbcType=VARCHAR}
+		</if>
+		<if test="origin != null and origin != ''">
+			and ORIGIN=#{origin,jdbcType=VARCHAR}
+		</if>
+		<if test="address != null and address != ''">
+			and ADDRESS=#{address,jdbcType=VARCHAR}
+		</if>
+		<if test="quality != null and quality != ''">
+			and QUALITY=#{quality,jdbcType=VARCHAR}
+		</if>
+		<if test="remark != null and remark != ''">
+			and REMARK=#{remark,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<update id="updateAddress" >
+		update music 
+	<!-- 	<if test="songId != null and songId != ''">
+			 SONG_ID=#{songId,jdbcType=VARCHAR}
+		</if> 
+		<if test="songName != null and songName != ''">
+			 SONG_NAME=#{songName,jdbcType=VARCHAR}
+		</if>
+		<if test="songExtra != null and songExtra != ''">
+			 SONG_EXTRA=#{songExtra,jdbcType=VARCHAR}
+		</if>
+		<if test="playlistId != null and playlistId != ''">
+			 PLAYLIST_ID=#{playlistId,jdbcType=VARCHAR}
+		</if>
+		<if test="playlistName != null and playlistName != ''">
+			 PLAYLIST_NAME=#{playlistName,jdbcType=VARCHAR}
+		</if>
+		<if test="playlistExtra != null and playlistExtra != ''">
+			 PLAYLIST_EXTRA=#{playlistExtra,jdbcType=VARCHAR}
+		</if>
+		<if test="singerName != null and singerName != ''">
+			 SINGER_NAME=#{singerName,jdbcType=VARCHAR}
+		</if>
+		<if test="singerExtra != null and singerExtra != ''">
+			 SINGER_EXTRA=#{singerExtra,jdbcType=VARCHAR}
+		</if>
+		<if test="albumName != null and albumName != ''">
+			 ALBUM_NAME=#{albumName,jdbcType=VARCHAR}
+		</if>-->
+	<!-- 	<if test="origin != null and origin != ''">
+			 ORIGIN=#{origin,jdbcType=VARCHAR}
+		</if> -->
+		set ADDRESS=#{address,jdbcType=VARCHAR}
+	<!-- 	<if test="quality != null and quality != ''">
+			 QUALITY=#{quality,jdbcType=VARCHAR}
+		</if>-->
+		where SONG_ID=#{songId,jdbcType=VARCHAR}
+		and ORIGIN=#{origin,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="manualupdate" >
+	update music
+	<trim prefix="set" suffixOverrides=",">
+	  ADDRESS=#{address,jdbcType=VARCHAR},
+	  REMARK=#{remark,jdbcType=VARCHAR},
+	 </trim>
+	 where SONG_ID=#{songId,jdbcType=VARCHAR}
+		and ORIGIN=#{origin,jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="insert">
+		insert into music (<include refid="Base_Column_List"/>)
+		values (#{songId,jdbcType=VARCHAR},#{songName,jdbcType=VARCHAR},
+		#{songExtra,jdbcType=VARCHAR},#{playlistId,jdbcType=VARCHAR},#{playlistName,jdbcType=VARCHAR},
+		#{playlistExtra,jdbcType=VARCHAR},#{singerName,jdbcType=VARCHAR},#{singerExtra,jdbcType=VARCHAR},
+		#{albumName,jdbcType=VARCHAR},#{origin,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},
+		#{quality,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="selectNoFile" resultMap="BaseResultMap" >
+		select <include refid="Base_Column_List"/> from music 
+		where ADDRESS is null or ADDRESS=''
+	</select>
+</mapper>

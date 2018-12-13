@@ -42,6 +42,7 @@ import com.musicManage.util.FileUtil;
 import com.musicManage.util.HttpsUtils;
 
 import sun.misc.BASE64Encoder;
+import us.codecraft.webmagic.Page;
 
 
 @Service
@@ -304,5 +305,47 @@ public class ManageUpdateServiceImpl implements ManageUpdateService{
 			musicDao.manualupdate(music);
 		}
 		
+	}
+
+	@Override
+	public List<MusicDO> selectNoCopyRightFile() {
+		List<MusicDO> list=musicDao.selectNoCopyRightFile();
+		try {
+			HttpsUtils h = new HttpsUtils();
+			CloseableHttpClient httpClient = h.getHttpClient();
+			HttpPost httpPost = new HttpPost("http://music.sonimei.cn/");
+			httpPost.addHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:63.0) Gecko/20100101 Firefox/63.0");
+			httpPost.addHeader("X-Requested-With","XMLHttpRequest");
+			for (MusicDO musicDO : list) {
+					List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+					nvps.add(new BasicNameValuePair("filter", "id"));
+					nvps.add(new BasicNameValuePair("input", musicDO.getSongId()));
+					nvps.add(new BasicNameValuePair("page", "1"));
+					String origin = "";
+					if (musicDO.getOrigin().equals("NetEasemusic")) {
+						origin = "netease";
+					} else if (musicDO.getOrigin().equals("QQmusic")) {
+						origin = "qq";
+					}
+					nvps.add(new BasicNameValuePair("type", origin));
+					httpPost.setEntity(new UrlEncodedFormEntity(nvps, "utf-8"));
+					try {
+						HttpResponse httpResponse = httpClient.execute(httpPost);
+						HttpEntity resEntity = httpResponse.getEntity();
+						String result = EntityUtils.toString(resEntity, "utf-8");
+						Page page = new Page();
+						page.setRawText(result);
+						String address = page.getJson().jsonPath("$.data[0].url").get();
+						System.out.println(address);
+						musicDO.setAddress(address);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 }

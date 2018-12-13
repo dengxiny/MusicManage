@@ -20,4 +20,6 @@ public interface MusicDao {
 	List<MusicDO> selectNoFile();
 	
 	void manualupdate(MusicDO music);
+
+	List<MusicDO> selectNoCopyRightFile();
 }

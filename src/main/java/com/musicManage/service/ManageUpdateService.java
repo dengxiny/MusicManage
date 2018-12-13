@@ -30,4 +30,10 @@ public interface ManageUpdateService {
 	 * @param list
 	 */
 	void manupdateFile(MusicDO music);
+	/**
+	 * 查询受版权限制下载
+	 * @param music
+	 * @return
+	 */
+	List<MusicDO> selectNoCopyRightFile();
 }

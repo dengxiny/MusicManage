@@ -130,4 +130,13 @@
 		select <include refid="Base_Column_List"/> from music 
 		where ADDRESS is null or ADDRESS=''
 	</select>
+	
+	
+	<select id="selectNoCopyRightFile" resultMap="BaseResultMap" >
+		select DISTINCT(SONG_NAME),SONG_ID,SINGER_NAME,ALBUM_NAME,ORIGIN from 
+		(SELECT * FROM music WHERE address IS NULL OR address ='') a
+		WHERE a.song_name NOT IN (SELECT music.song_name FROM music WHERE address IS NOT NULL 
+		AND address<![CDATA[<>]]>'') 
+	</select>
+	
 </mapper>

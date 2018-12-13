@@ -110,4 +110,13 @@ public class MusicManageController {
 			updateService.manupdateFile(music);
 			return "manupdate";
 		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		@RequestMapping("/selnocopyright")
+		public List<MusicDO> manupdate() {
+			return updateService.selectNoCopyRightFile();
+		}
 }
